@@ -5,41 +5,29 @@ import numpy as np
 class CorpseManager:
     def __init__(self, data_file):
         data = pd.read_csv(data_file)
-        subject = data.subject.tolist()
-        verb = data.verb.tolist()
-        adverb = data.adverb.tolist()
-        object = subject + data.object.tolist()
-        self.vocabulary = {'subject': subject, 'verb': verb, 'adverb': adverb, 'object': object}
-        self.clean_voc()
+        self.vocabulary = {}
+        self.retrieve_voc(data)
+        self.vocabulary['object'] += self.vocabulary['subject']
 
     def generate(self):
         subject = self.get_random('subject').capitalize()
-        sentence = subject + \
-                   " " + self.get_random('verb')
+        sentence = subject + " " + self.get_random('verb')
         r = np.random.rand()
         if r < 0.25:
             sentence += " " + self.get_random('adverb')
-        object = self.get_random('object')
-        if str(object) == str(subject):
-            object = self.get_random('object')
-        sentence += " " + object + "."
+        obj = self.get_random('object')
+        if obj == subject:
+            obj = self.get_random('object')
+        sentence += " " + obj + "."
         return sentence
 
     def get_random(self, voc_type):
-        val = str(np.random.choice(self.vocabulary[voc_type]))
-        while val == "nan":
-            val = str(np.random.choice(self.vocabulary[voc_type]))
-        return val
+        return str(np.random.choice(self.vocabulary[voc_type]))
 
-    def clean_voc(self):
-        for l in self.vocabulary.values():
-            assert isinstance(l, list)
-            while 'nan' in l:
-                l.remove('nan')
-            check_duplicate = []
-            for item in l:
-                if item in check_duplicate:
-                    l.remove(item)
-                    continue
-                check_duplicate.append(item)
-                item = str(item).strip().lower()
+    def retrieve_voc(self, data):
+        for col_name in data.columns:
+            voc = data[col_name].dropna().drop_duplicates().tolist()
+            for i in range(len(voc)):
+                voc[i] = str(voc[i]).strip()
+                voc[i] = voc[i][0].lower() + voc[i][1:]
+            self.vocabulary[col_name] = voc
