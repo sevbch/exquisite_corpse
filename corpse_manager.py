@@ -13,16 +13,16 @@ class CorpseManager:
         self.clean_voc()
 
     def generate(self):
-        r = np.random.rand()
-        subject = self.get_random('subject')
+        subject = self.get_random('subject').capitalize()
         sentence = subject + \
                    " " + self.get_random('verb')
+        r = np.random.rand()
         if r < 0.25:
             sentence += " " + self.get_random('adverb')
         object = self.get_random('object')
-        if object == subject:
+        if str(object) == str(subject):
             object = self.get_random('object')
-        sentence += " " + object
+        sentence += " " + object + "."
         return sentence
 
     def get_random(self, voc_type):
@@ -42,5 +42,4 @@ class CorpseManager:
                     l.remove(item)
                     continue
                 check_duplicate.append(item)
-                if str(item)[-1] == ' ':
-                    item = str(item)[:-1]
+                item = str(item).strip().lower()
