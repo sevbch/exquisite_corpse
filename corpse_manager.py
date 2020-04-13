@@ -29,5 +29,8 @@ class CorpseManager:
             voc = data[col_name].dropna().drop_duplicates().tolist()
             for i in range(len(voc)):
                 voc[i] = str(voc[i]).strip()
+                if len(voc[i]) == 0:
+                    del voc[i]
+                    continue
                 voc[i] = voc[i][0].lower() + voc[i][1:]
             self.vocabulary[col_name] = voc
