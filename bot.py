@@ -5,7 +5,7 @@ from corpse_manager import CorpseManager
 
 def tweet(file):
     corpse = CorpseManager(file)
-    sentence = corpse.generate() + " #CadavreExquis"
+    sentence = corpse.generate()
     auth = tweepy.OAuthHandler(secrets.consumer_key, secrets.consumer_secret)
     auth.set_access_token(secrets.access_token, secrets.access_token_secret)
     api = tweepy.API(auth)

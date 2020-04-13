@@ -11,15 +11,16 @@ class CorpseManager:
 
     def generate(self):
         subject = self.get_random('subject').capitalize()
-        sentence = subject + " " + self.get_random('verb')
+        verb = self.get_random('verb')
+        obj = self.get_random('object')
+        while obj == subject:
+            obj = self.get_random('object')
+        sentence = [subject, verb, obj]
         r = np.random.rand()
         if r < 0.25:
-            sentence += " " + self.get_random('adverb')
-        obj = self.get_random('object')
-        if obj == subject:
-            obj = self.get_random('object')
-        sentence += " " + obj + "."
-        return sentence
+            adverb = self.get_random('adverb')
+            sentence.insert(2, adverb)
+        return ' '.join(sentence) + '. #CadavreExquis'
 
     def get_random(self, voc_type):
         return str(np.random.choice(self.vocabulary[voc_type]))
