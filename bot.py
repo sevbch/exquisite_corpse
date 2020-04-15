@@ -3,8 +3,8 @@ import secrets
 from corpse_manager import CorpseManager
 
 
-def tweet(file):
-    corpse = CorpseManager(file)
+def tweet(data):
+    corpse = CorpseManager(data_pickle=data)
     sentence = corpse.generate()
     auth = tweepy.OAuthHandler(secrets.consumer_key, secrets.consumer_secret)
     auth.set_access_token(secrets.access_token, secrets.access_token_secret)
@@ -15,5 +15,5 @@ def tweet(file):
 
 
 if __name__ == '__main__':
-    file = "exquisite_data.csv"
+    file = 'data_pickle'
     tweet(file)
